@@ -1,0 +1,22 @@
+* * * * * *
+| | | | | | 
+| | | | | +-- Year              (range: 1900-3000)
+| | | | +---- Day of the Week   (range: 1-7, 1 standing for Monday)
+| | | +------ Month of the Year (range: 1-12)
+| | +-------- Day of the Month  (range: 1-31)
+| +---------- Hour              (range: 0-23)
++------------ Minute            (range: 0-59)
+
+00 18 * * * source /home/aupm/.bash_profile; /var/aupm/wifi_reprocess/wifi_delayed.sh /var/aupm/wifi_reprocess/wifi_delayed.env > /var/aupm/wifi_reprocess/cron_wfd_daily_data.log 2>&1
+
+#########################################################
+#####             cron backup job                   #####
+#########################################################
+15 20 * * * crontab -l > ~/crontab_bkp.txt
+
+00 10 26 * * source /home/aupm/.bash_profile; /var/aupm/ndw/wifi_ndw_monthly_data.sh /var/aupm/ndw/wifi_ndw_monthly_data.env >> /var/aupm/ndw/cron_wifi_ndw_sdv_monthly_data.log 2>&1
+
+00 00,05,10,15,20 * * * find /var/cemp/hsd/beacon/mediation/h2_archive/ -type d -name 'H2_bkp_*' -mmin +1440 -print -exec rm -rf {} \; > /var/cemp/logs/beacon/mediation/H2_clear_$(date +\%m\%d\%y)_$(date +\%H\%M\%S) 2>&1
+
+#### Create directory on all servers ####
+15 07 * * 1,4,5 /home/beacon/scripts/med_restart/all_servers.sh > /var/cemp/logs/beacon/mediation/all_servers_$(date +\%m\%d\%y)_$(date +\%H\%M\%S) 2>&1
